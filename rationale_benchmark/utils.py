@@ -149,7 +149,7 @@ def load_documents(data_dir: str, docids: Set[str] = None) -> Dict[str, List[Lis
     else:
         docids = sorted(set(str(d) for d in docids))
     for d in docids:
-        with open(os.path.join(docs_dir, d), 'r') as inf:
+        with open(os.path.join(docs_dir, d), 'r', encoding='utf-8') as inf:
             lines = [l.strip() for l in inf.readlines()]
             lines = list(filter(lambda x: bool(len(x)), lines))
             tokenized = [list(filter(lambda x: bool(len(x)), line.strip().split(' '))) for line in lines]
