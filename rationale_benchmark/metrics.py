@@ -282,27 +282,22 @@ def score_classifications(instances: List[dict], annotations: List[Annotation], 
         cls_scores_ = [cls_scores_[k] for k in keys]
         faith_scores_ = [faith_scores_[k] for k in keys]
         return entropy(faith_scores_, cls_scores_)
-    labels = list(set(x.classification for x in annotations))
-    labels +=['normal']
-    label_to_int = {'hatespeech': 0, 'normal': 1, 'offensive': 2}
+    # labels = list(set(x.classification for x in annotations))
+    labels = ['0', '1']
+    label_to_int = {'0':0, '1':1}
     key_to_instances = {inst['annotation_id']:inst for inst in instances}
     truth = []
     predicted = []
-    # test only
-    # i = 0
+    
     for ann in annotations:
-        # print(f'Processing annotation {ann.annotation_id} with classification {ann.classification}')
         truth.append(label_to_int[ann.classification])
         inst = key_to_instances[ann.annotation_id]
-        # print(f"Predicted classification {inst['classification']} with scores {inst['classification_scores']}")
-        # print()
         predicted.append(label_to_int[inst['classification']])
-        # i+=1
-        # if i == 20:
-            # break
+        
     classification_scores = classification_report(truth, predicted, output_dict=True, target_names=labels, digits=3)
     accuracy = accuracy_score(truth, predicted)
     if 'comprehensiveness_classification_scores' in instances[0]:
+        print(instances[0])
         comprehensiveness_scores = [x['classification_scores'][x['classification']] - x['comprehensiveness_classification_scores'][x['classification']] for x in instances]
         comprehensiveness_score = np.average(comprehensiveness_scores)
     else :
